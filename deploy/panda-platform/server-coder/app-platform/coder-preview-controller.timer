@@ -1,0 +1,10 @@
+[Unit]
+Description=Reconcile live workspace previews
+
+[Timer]
+OnBootSec=15
+OnUnitActiveSec=30
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

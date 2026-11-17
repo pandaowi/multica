@@ -1,0 +1,11 @@
+## Standard development database and QA
+
+The installed `coder-dev` helper supplies project-scoped PostgreSQL, the pinned QA browser with libraries/fonts, and private synthetic test-account profiles. In non-interactive container shells first set `PATH="$HOME/.local/bin:$PATH"`. Read the approved Multica coder-development skill's `references/bootstrap.md` when using these capabilities.
+
+For a new PostgreSQL app, run its initial explicit migration with `coder-dev postgres -- npm run migrate`, then register the existing supervisor with `"$HOME/.local/bin/coder-preview" start -- "$HOME/.local/bin/coder-dev" postgres -- npm start`. It allocates the database port, injects DATABASE_URL/APP_ORIGIN, persists project data, starts the app and stops its database on exit. Run explicit migrations via `coder-dev env -- npm run migrate`. Existing apps keep their existing lifecycle; do not migrate or restart them merely to adopt this helper.
+
+Seed a synthetic account through `coder-dev account provision --name qa -- npm run seed` with the project's idempotent seed script reading TEST_EMAIL/TEST_PASSWORD. Verify actual login plus `coder-dev ready` before the first auth-candidate handoff. Reviewers use profile qa through `coder-dev account run` or `coder-dev qa run`; no manual credential relay or per-project Playwright/library/font install is needed. Never log or publish the account values. A readiness result is not independent QA or Security approval; those checks remain required.
+
+## Managed job resource attribution
+
+For builds and longer verification commands, use `coder-dev job --kind build -- npm run build` or `coder-dev job --kind test -- npm test`. Kinds: build, qa, test, migration, seed, other. `coder-dev qa run` already tracks its own job; do not double-wrap it. Do not wrap the long-lived preview server as a build job. Existing apps keep their lifecycle. The wrapper preserves command exit codes and records private job outcome metadata without storing command arguments/environment values. Host sampling attributes resources and OOM victims when process identity is observed; short/raw-shell jobs can remain unattributed. Task labels do not grant access or prove billable usage. Never restart another app or exceed workspace limits to complete a job.

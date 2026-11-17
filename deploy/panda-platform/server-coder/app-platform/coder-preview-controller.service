@@ -1,0 +1,11 @@
+[Unit]
+Description=Route live workspace previews and provision their domains
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/coder/app-platform/preview_controller.py
+TimeoutStartSec=300
+CPUQuota=100%
+MemoryMax=256M

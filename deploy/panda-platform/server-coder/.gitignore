@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+*.token
+*.key
+*.pem
+state/
+routes/
+keys/
+backups/
+test-results/

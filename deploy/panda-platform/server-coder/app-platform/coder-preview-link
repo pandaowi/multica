@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+"""Compatibility entry point: automatic multi-app preview management."""
+import os
+from pathlib import Path
+import sys
+
+if len(sys.argv) != 2:
+    raise SystemExit('Ports are managed automatically. Use: coder-preview start [--name APP_NAME]')
+program = str(Path.home() / '.local/bin/coder-preview')
+os.execv(program, [program, 'start', '--name', sys.argv[1]])

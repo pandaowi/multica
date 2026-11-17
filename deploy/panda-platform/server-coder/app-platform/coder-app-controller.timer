@@ -1,0 +1,11 @@
+[Unit]
+Description=Discover committed Coder app manifests every 30 seconds
+
+[Timer]
+OnBootSec=45s
+OnUnitInactiveSec=30s
+AccuracySec=1s
+Unit=coder-app-controller.service
+
+[Install]
+WantedBy=timers.target

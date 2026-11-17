@@ -1,0 +1,20 @@
+[Unit]
+Description=Watch approved Coder supervisors and sample project/job resource usage
+After=docker.service
+Requires=docker.service
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+Environment=DOCKER_HOST=unix://%t/docker.sock
+ExecStart=/usr/bin/python3 /opt/coder/app-platform/observability/observer.py --config /opt/coder/app-platform/observability/config.json --state /opt/coder/app-platform/state/observability
+Restart=on-failure
+RestartSec=5
+CPUQuota=20%
+MemoryMax=128M
+TasksMax=32
+UMask=0077
+
+[Install]
+WantedBy=default.target
