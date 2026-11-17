@@ -1,6 +1,0 @@
-#!/bin/sh
-set -eu
-if [ -d /opt/coder-workspace-kit/browsers ]; then
-  export PLAYWRIGHT_BROWSERS_PATH=/opt/coder-workspace-kit/browsers
-fi
-exec node "$HOME/.local/share/coder-development-tools/cli.mjs" "$@"

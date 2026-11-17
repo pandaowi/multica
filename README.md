@@ -299,6 +299,6 @@ covering hosted services, commercial embedding, and branding. Self-host it, modi
 it; the exact terms are in the [LICENSE](LICENSE), attribution notices in [NOTICE](NOTICE).
 
 
-## Panda platform fork
+## Panda fork
 
-Fork ini menambahkan privasi penyedia pada API/UI, penyaringan progres pelanggan, dan pemicu leader squad yang selektif. Installer dua VM Coder–Multica serta penghubung runtime tersedia pada [panduan platform Panda](deploy/panda-platform/README.md), dengan dokumentasi operasional bahasa Indonesia. Identitas dan kredensial deployment diisi operator; konfigurasi produksi tidak disimpan dalam repository.
+Fork ini menambahkan privasi penyedia pada API/UI, penyaringan progres pelanggan, dan pemicu leader squad yang selektif. Installer dan orkestrasi Coder–Multica dikelola terpisah pada [repository coder-platform](https://github.com/pandaowi/coder-platform), dengan dokumentasi operasional bahasa Indonesia. Identitas dan kredensial deployment diisi operator; konfigurasi produksi tidak disimpan dalam repository.
