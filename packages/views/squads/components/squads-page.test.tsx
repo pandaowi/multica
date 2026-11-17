@@ -104,6 +104,15 @@ beforeEach(() => {
 });
 
 describe("SquadsPage header", () => {
+  it("shows provider squad identity despite a stale empty My squads preference, without a detail link", () => {
+    mocks.squads = [{ ...squad("provider", "Application Development", ""), details_accessible: false, leader_id: "" }];
+    mocks.viewState.scope = "mine";
+    renderPage();
+    expect(screen.getByRole("heading", { level: 1, name: "All squads" })).toBeInTheDocument();
+    expect(screen.getByText("Application Development")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Application Development/ })).not.toBeInTheDocument();
+    expect(mocks.viewState.setScope).toHaveBeenCalledWith("all");
+  });
   it("titles the page with the scope and picks another scope from the title menu", async () => {
     const user = userEvent.setup();
     renderPage();

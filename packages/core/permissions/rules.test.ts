@@ -101,6 +101,11 @@ function makeRuntime(ownerId: string | null): RuntimeDevice {
 }
 
 describe("canEditAgent", () => {
+  it("respects provider protection even for a workspace admin", () => {
+    const protectedAgent = makeAgent({ owner_id: ALICE, instructions_redacted: true });
+    expect(canEditAgent(protectedAgent, { userId: BOB, role: "admin" }).allowed).toBe(false);
+    expect(canAssignAgentToIssue(protectedAgent, { userId: ALICE, role: "member" }).allowed).toBe(true);
+  });
   const agent = makeAgent({ owner_id: ALICE });
 
   it("allows the owner", () => {

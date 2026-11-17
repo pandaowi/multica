@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ExternalLink,
   Loader2,
@@ -381,8 +381,15 @@ export function SquadsPage() {
     return me?.role === "owner" || me?.role === "admin";
   }, [members, currentUser]);
 
-  const scope = useSquadsViewStore((s) => s.scope);
+  const savedScope = useSquadsViewStore((s) => s.scope);
+  const scope = savedScope === "mine" &&
+    squads.some((s) => s.details_accessible === false) &&
+    !squads.some((s) => s.creator_id === currentUser?.id)
+      ? "all" : savedScope;
   const setScope = useSquadsViewStore((s) => s.setScope);
+  useEffect(() => {
+    if (!isLoading && scope !== savedScope) setScope(scope);
+  }, [isLoading, scope, savedScope, setScope]);
   const sortField = useSquadsViewStore((s) => s.sortField);
   const sortDirection = useSquadsViewStore((s) => s.sortDirection);
   const hiddenColumns = useSquadsViewStore((s) => s.hiddenColumns);
@@ -493,7 +500,7 @@ export function SquadsPage() {
   );
 
   const canManage = (squad: Squad) =>
-    isWorkspaceAdmin || (!!currentUser && squad.creator_id === currentUser.id);
+    squad.details_accessible !== false && (isWorkspaceAdmin || (!!currentUser && squad.creator_id === currentUser.id));
 
   const columns = useMemo<CollectionColumn<Squad>[]>(
     () => [
@@ -515,7 +522,7 @@ export function SquadsPage() {
         width: 160,
         core: true,
         cell: (squad) => (
-          <LeaderCell leaderId={squad.leader_id} leader={agentsById.get(squad.leader_id)} />
+          squad.details_accessible === false ? <CollectionEmptyValue /> : <LeaderCell leaderId={squad.leader_id} leader={agentsById.get(squad.leader_id)} />
         ),
       },
       {
@@ -556,6 +563,9 @@ export function SquadsPage() {
     [t, locale, agentsById, membersById],
   );
 
+  const displayColumns = squads.length > 0 && squads.every((s) => s.details_accessible === false)
+    ? columns.filter((column) => column.key === "name") : columns;
+
   const sort: CollectionSort = {
     field: sortField,
     direction: sortDirection,
@@ -594,7 +604,7 @@ export function SquadsPage() {
         actions={
           <>
             <CollectionDisplayMenu
-              columns={columns}
+              columns={displayColumns}
               hiddenColumns={hiddenColumns}
               onToggleColumn={(key) => toggleColumn(key as SquadColumnKey)}
               sort={sort}
@@ -612,12 +622,12 @@ export function SquadsPage() {
       ) : (
         <CollectionList
           label={scopeLabels[scope]}
-          columns={columns}
+          columns={displayColumns}
           hiddenColumns={hiddenColumns}
           rows={rows}
           loading={isLoading}
           getRowId={(squad) => squad.id}
-          getRowHref={(squad) => p.squadDetail(squad.id)}
+          getRowHref={(squad) => squad.details_accessible === false ? null : p.squadDetail(squad.id)}
           getRowTitle={(squad) => squad.name}
           rowMenu={
             canManageAnyRow

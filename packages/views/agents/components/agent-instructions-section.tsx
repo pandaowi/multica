@@ -63,7 +63,9 @@ export function AgentInstructionsSection({
         )
       }
     >
-      {editing ? (
+      {agent.instructions_redacted ? (
+        <p className="text-body text-muted-foreground">{t(($) => $.sections.managed_instructions_notice)}</p>
+      ) : editing ? (
         <InstructionsTab
           agent={agent}
           onSave={async (updates) => {

@@ -205,7 +205,10 @@
     "edit": "编辑",
     "add": "添加",
     "manage": "管理",
-    "instructions_empty": "还没有指令。"
+    "instructions_empty": "还没有指令。",
+    "managed_instructions_notice": "指令由平台提供方管理。",
+    "create_own_skill": "创建自己的技能",
+    "managed_skills_notice": "此代理的技能由平台提供方管理。你可以在技能库中创建和管理自己的技能。"
   },
   "panel": {
     "status": "状态",

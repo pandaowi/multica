@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/multica-ai/multica/server/internal/providerprivacy"
 	"net/http"
 	"strconv"
 	"strings"
@@ -463,6 +464,15 @@ func (h *Handler) ListPluginTaskMessages(w http.ResponseWriter, r *http.Request)
 	if caller.IssueScope.Valid && (!task.IssueID.Valid ||
 		uuidToString(task.IssueID) != uuidToString(caller.IssueScope)) {
 		publicapiv1.WriteProblem(w, r, http.StatusNotFound, "not_found", "task not found")
+		return
+	}
+
+	viewer := ""
+	if actor.isMember() {
+		viewer = uuidToString(actor.Member.UserID)
+	}
+	if providerprivacy.Default().Restricted(viewer, scope.WorkspaceID) {
+		publicapiv1.WriteProblem(w, r, http.StatusForbidden, "provider_internal_resource", "raw execution details are restricted to provider operators")
 		return
 	}
 

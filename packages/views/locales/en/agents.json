@@ -216,7 +216,10 @@
     "edit": "Edit",
     "add": "Add",
     "manage": "Manage",
-    "instructions_empty": "No instructions yet."
+    "instructions_empty": "No instructions yet.",
+    "create_own_skill": "Create your own skill",
+    "managed_skills_notice": "This agent’s skills are managed by your platform provider. You can create and manage your own skills in the skill library.",
+    "managed_instructions_notice": "Instructions are managed by your platform provider."
   },
   "panel": {
     "status": "Status",

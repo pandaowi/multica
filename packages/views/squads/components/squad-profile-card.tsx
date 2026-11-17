@@ -82,7 +82,7 @@ export function SquadProfileCard({ squadId }: SquadProfileCardProps) {
             )}
           </div>
         </div>
-        {!isArchived && (
+        {!isArchived && squad.details_accessible !== false && (
           <AppLink
             href={p.squadDetail(squad.id)}
             className="mr-1 mt-0.5 shrink-0 text-caption font-normal text-brand opacity-0 transition-opacity group-hover:opacity-100"

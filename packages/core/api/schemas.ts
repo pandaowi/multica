@@ -2863,6 +2863,8 @@ const SquadMemberPreviewSchema = z.object({
 export const SquadSchema = z.object({
   id: z.string(),
   workspace_id: z.string(),
+  details_accessible: z.boolean().catch(false).default(true),
+  instructions_redacted: z.boolean().catch(true).default(false),
   name: z.string(),
   description: z.string().default(""),
   instructions: z.string().default(""),

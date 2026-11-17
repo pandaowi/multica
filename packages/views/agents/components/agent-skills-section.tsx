@@ -6,6 +6,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { Agent } from "@multica/core/types";
 import { api } from "@multica/core/api";
+import { useWorkspacePaths } from "@multica/core/paths";
+import { AppLink } from "../../navigation";
 import { useWorkspaceId } from "@multica/core/hooks";
 import {
   skillListOptions,
@@ -35,6 +37,8 @@ export function AgentSkillsSection({
   onManage: () => void;
 }) {
   const { t } = useT("agents");
+  const p = useWorkspacePaths();
+  const protectedConfig = agent.instructions_redacted === true;
   const qc = useQueryClient();
   const wsId = useWorkspaceId();
   const { data: workspaceSkills = [] } = useQuery(skillListOptions(wsId));
@@ -63,9 +67,16 @@ export function AgentSkillsSection({
       count={agent.skills.length}
       action={
         <>
-          <ObjectSectionAction icon={Settings2} onClick={onManage}>
-            {t(($) => $.sections.manage)}
-          </ObjectSectionAction>
+          {protectedConfig ? (
+            <AppLink href={p.skills()} className="inline-flex items-center gap-1 text-caption text-brand hover:underline">
+              <Plus className="size-3.5" aria-hidden="true" />
+              {t(($) => $.sections.create_own_skill)}
+            </AppLink>
+          ) : (
+            <ObjectSectionAction icon={Settings2} onClick={onManage}>
+              {t(($) => $.sections.manage)}
+            </ObjectSectionAction>
+          )}
           {canEdit ? (
             <ObjectSectionAction
               icon={Plus}
@@ -78,7 +89,9 @@ export function AgentSkillsSection({
         </>
       }
     >
-      {agent.skills.length === 0 ? (
+      {protectedConfig ? (
+        <p className="text-body text-muted-foreground">{t(($) => $.sections.managed_skills_notice)}</p>
+      ) : agent.skills.length === 0 ? (
         <p className="text-body text-muted-foreground">
           {t(($) => $.tab_body.skills.empty_title)}
         </p>

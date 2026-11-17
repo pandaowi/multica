@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/multica-ai/multica/server/internal/providerprivacy"
 )
 
 const (
@@ -184,7 +185,11 @@ drain:
 		if c.stopped.Load() {
 			return false
 		}
-		if err := c.conn.WriteMessage(websocket.TextMessage, frame); err != nil {
+		projected, allowed := providerprivacy.Default().Event(c.userID, c.workspaceID, frame)
+		if !allowed {
+			continue
+		}
+		if err := c.conn.WriteMessage(websocket.TextMessage, projected); err != nil {
 			slog.Warn("websocket write error", "error", err, "user_id", c.userID, "workspace_id", c.workspaceID)
 			return false
 		}

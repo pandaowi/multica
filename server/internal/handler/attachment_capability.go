@@ -4,6 +4,8 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
+	"github.com/multica-ai/multica/server/internal/middleware"
+	"github.com/multica-ai/multica/server/internal/providerprivacy"
 	"net/http"
 	"strconv"
 	"sync"
@@ -218,6 +220,17 @@ func (h *Handler) DownloadAttachmentWithCapability(w http.ResponseWriter, r *htt
 	att, err := h.Queries.GetAttachmentByIDOnly(r.Context(), attUUID)
 	if err != nil {
 		writeError(w, http.StatusNotFound, "attachment not found")
+		return
+	}
+	// A copied capability must not downgrade operator-only artifact access.
+	if providerprivacy.Default().PrivateArtifact(uuidToString(att.WorkspaceID), uuidToString(att.ID), att.UploaderType, uuidToString(att.UploaderID)) {
+		middleware.Auth(h.Queries, nil, nil, nil)(http.HandlerFunc(func(w http.ResponseWriter, authenticated *http.Request) {
+			if !providerprivacy.Default().IsOperator(authenticated.Header.Get("X-User-ID")) {
+				writeError(w, http.StatusForbidden, "provider internal artifact requires operator access")
+				return
+			}
+			h.DownloadAttachment(w, authenticated)
+		})).ServeHTTP(w, r)
 		return
 	}
 	if h.Storage == nil {

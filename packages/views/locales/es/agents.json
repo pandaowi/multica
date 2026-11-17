@@ -1066,7 +1066,10 @@
     "edit": "Editar",
     "add": "Añadir",
     "manage": "Gestionar",
-    "instructions_empty": "Aún no hay instrucciones."
+    "instructions_empty": "Aún no hay instrucciones.",
+    "managed_instructions_notice": "Las instrucciones las gestiona el proveedor de la plataforma.",
+    "create_own_skill": "Crear tu propia habilidad",
+    "managed_skills_notice": "El proveedor de la plataforma gestiona las habilidades de este agente. Puedes crear y gestionar tus propias habilidades en la biblioteca."
   },
   "panel": {
     "status": "Estado",

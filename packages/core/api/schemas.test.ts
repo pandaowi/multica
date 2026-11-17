@@ -1182,6 +1182,14 @@ describe("SquadListSchema member preview drift", () => {
     expect(parsed.member_preview).toEqual([]);
   });
 
+  it("keeps provider squad identity while denying malformed detail access", () => {
+    const parsed = SquadSchema.parse({ ...baseSquad, details_accessible: "false", instructions_redacted: "true" });
+    expect(parsed.id).toBe(baseSquad.id);
+    expect(parsed.details_accessible).toBe(false);
+    expect(parsed.instructions_redacted).toBe(true);
+    expect(SquadSchema.parse(baseSquad).details_accessible).toBe(true);
+  });
+
   it("preserves lightweight member preview rows", () => {
     const parsed = SquadListSchema.parse([
       {

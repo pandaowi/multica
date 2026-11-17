@@ -205,7 +205,10 @@
     "edit": "編集",
     "add": "追加",
     "manage": "管理",
-    "instructions_empty": "まだ指示はありません。"
+    "instructions_empty": "まだ指示はありません。",
+    "managed_instructions_notice": "指示はプラットフォーム提供者が管理しています。",
+    "create_own_skill": "自分のスキルを作成",
+    "managed_skills_notice": "このエージェントのスキルはプラットフォーム提供者が管理しています。自分のスキルはスキルライブラリで作成・管理できます。"
   },
   "panel": {
     "status": "ステータス",

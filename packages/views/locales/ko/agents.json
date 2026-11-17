@@ -205,7 +205,10 @@
     "edit": "편집",
     "add": "추가",
     "manage": "관리",
-    "instructions_empty": "아직 지침이 없습니다."
+    "instructions_empty": "아직 지침이 없습니다.",
+    "managed_instructions_notice": "지침은 플랫폼 제공업체에서 관리합니다.",
+    "create_own_skill": "내 스킬 만들기",
+    "managed_skills_notice": "이 에이전트의 스킬은 플랫폼 제공업체에서 관리합니다. 스킬 라이브러리에서 자신의 스킬을 만들고 관리할 수 있습니다."
   },
   "panel": {
     "status": "상태",

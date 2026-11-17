@@ -23,6 +23,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@multica/ui/components/ui/dropdown-menu";
+import { Button } from "@multica/ui/components/ui/button";
 import { ActorAvatar } from "@multica/ui/components/common/actor-avatar";
 import { FILTER_ITEM_CLASS, HoverCheck } from "../../common/hover-check";
 import { stopMenuSearchKeys } from "../../issues/components/advanced-filter-panel";
@@ -32,7 +33,6 @@ import {
 } from "@multica/core/skills/stores";
 import { LabelChip } from "../../labels/label-chip";
 import {
-  CollectionCreateButton,
   CollectionFilterButton,
 } from "../../layout/collection-page";
 import { useT } from "../../i18n";
@@ -327,7 +327,7 @@ export function SkillCreateMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={trigger ?? <CollectionCreateButton label={t(($) => $.page.new_skill)} />}
+        render={trigger ?? <Button variant="outline" size="sm"><Plus className="size-3.5" aria-hidden="true" />{t(($) => $.page.new_skill)}</Button>}
       />
       <DropdownMenuContent align={align} className="w-72">
         {SKILL_CREATE_METHODS.map(({ key, icon: Icon }) => (

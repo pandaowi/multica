@@ -14,6 +14,8 @@ export interface Squad {
   name: string;
   description: string;
   instructions: string;
+  /** Server denies provider squad detail to this viewer. */
+  details_accessible?: boolean;
   avatar_url: string | null;
   leader_id: string;
   creator_id: string;

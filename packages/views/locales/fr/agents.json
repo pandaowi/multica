@@ -216,7 +216,10 @@
     "edit": "Modifier",
     "add": "Ajouter",
     "manage": "Gérer",
-    "instructions_empty": "Aucune instruction pour l'instant."
+    "instructions_empty": "Aucune instruction pour l'instant.",
+    "managed_instructions_notice": "Les instructions sont gérées par le fournisseur de votre plateforme.",
+    "create_own_skill": "Créer votre propre compétence",
+    "managed_skills_notice": "Les compétences de cet agent sont gérées par votre fournisseur de plateforme. Vous pouvez créer et gérer vos propres compétences dans la bibliothèque."
   },
   "panel": {
     "status": "Statut",

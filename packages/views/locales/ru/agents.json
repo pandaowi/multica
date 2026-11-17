@@ -238,7 +238,10 @@
     "runs_count_few": "{{count}} запуска",
     "runs_count_many": "{{count}} запусков",
     "recent_this_week_few": "{{count}} за эту неделю",
-    "recent_this_week_many": "{{count}} за эту неделю"
+    "recent_this_week_many": "{{count}} за эту неделю",
+    "managed_instructions_notice": "Инструкциями управляет поставщик платформы.",
+    "create_own_skill": "Создать свой навык",
+    "managed_skills_notice": "Навыками этого агента управляет поставщик платформы. Вы можете создавать свои навыки и управлять ими в библиотеке."
   },
   "panel": {
     "status": "Статус",

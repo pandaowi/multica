@@ -3,6 +3,8 @@ title: Agents
 description: An agent is a reusable set of identity, capabilities, and execution configuration in a workspace.
 ---
 
+> **Panda provider deployments:** when the operator enables provider privacy, provider instructions, internal skills, runtime configuration, and raw tool transcripts are restricted by the server. Members can request application work and see text progress and results. Provider squads remain visible by name without opening their details; members can manage their own skills but cannot attach them to shared provider agents. The operator can also enable selective leader wakeups: routine member progress does not wake the leader, while blockers, important decisions, review-ready results, and security or failure reports do. These restrictions do not apply to an unconfigured upstream deployment.
+
 import { Callout } from "fumadocs-ui/components/callout";
 import { AgentAccessDemo } from "@/components/demos/agent-access-demo";
 
