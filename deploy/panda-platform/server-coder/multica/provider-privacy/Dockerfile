@@ -1,15 +1,50 @@
-ARG PRIVACY_BUILD_BASE=golang:1.27.3-alpine
-FROM ${PRIVACY_BUILD_BASE} AS privacy-builder
-ENV GOMAXPROCS=2
-WORKDIR /src/server
-COPY server/go.mod server/go.sum ./
-RUN go mod download
-COPY server/ ./
-RUN go test -p 2 ./internal/providerprivacy ./internal/leaderrouting ./internal/realtime ./internal/middleware
-RUN go test -p 2 ./internal/handler ./cmd/server
-ARG MULTICA_SOURCE_REV=unknown
-RUN CGO_ENABLED=0 go build -p 2 -ldflags "-s -w -X main.version=panda-platform-20261117 -X main.commit=${MULTICA_SOURCE_REV}" -o /out/server ./cmd/server
+# --- Build stage ---
+FROM golang:1.27.4-alpine AS builder
 
-FROM ghcr.io/multica-ai/multica-backend@sha256:74e7bdddef780b925652f4518f18f54ab790bdfe1ec7803b4dac2019ee2525be
-COPY --from=privacy-builder /out/server /app/server
-LABEL id.panda.provider-privacy="3"
+RUN apk add --no-cache git
+
+ENV GOMAXPROCS=2
+WORKDIR /src
+
+# Cache dependencies
+COPY server/go.mod server/go.sum ./server/
+RUN cd server && go mod download
+
+# Copy server source
+COPY server/ ./server/
+
+# Verify provider boundaries before building the matching API and migration tools.
+RUN cd server && go test -p 2 ./internal/providerprivacy ./internal/leaderrouting ./internal/realtime ./internal/middleware ./internal/handler ./cmd/server ./cmd/migrate ./internal/migrations
+
+# Build binaries
+ARG VERSION=dev
+ARG COMMIT=unknown
+ARG DATE=unknown
+RUN cd server && CGO_ENABLED=0 go build -p 2 -ldflags "-s -w -X main.version=${VERSION} -X main.commit=${COMMIT}" -o bin/server ./cmd/server
+RUN cd server && CGO_ENABLED=0 go build -p 2 -ldflags "-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${DATE}" -o bin/multica ./cmd/multica
+RUN cd server && CGO_ENABLED=0 go build -p 2 -ldflags "-s -w" -o bin/migrate ./cmd/migrate
+RUN cd server && CGO_ENABLED=0 go build -p 2 -ldflags "-s -w" -o bin/maintenance ./cmd/maintenance
+RUN cd server && CGO_ENABLED=0 go build -p 2 -ldflags "-s -w" -o bin/backfill_task_usage_hourly ./cmd/backfill_task_usage_hourly
+RUN cd server && CGO_ENABLED=0 go build -p 2 -ldflags "-s -w" -o bin/backfill_codex_usage_cache ./cmd/backfill_codex_usage_cache
+
+# --- Runtime stage ---
+FROM alpine:3.21
+
+RUN apk add --no-cache ca-certificates tzdata
+
+WORKDIR /app
+
+COPY --from=builder /src/server/bin/server .
+COPY --from=builder /src/server/bin/multica .
+COPY --from=builder /src/server/bin/migrate .
+COPY --from=builder /src/server/bin/maintenance .
+COPY --from=builder /src/server/bin/backfill_task_usage_hourly .
+COPY --from=builder /src/server/bin/backfill_codex_usage_cache .
+COPY server/migrations/ ./migrations/
+COPY LICENSE NOTICE ./
+COPY docker/entrypoint.sh .
+RUN sed -i 's/\r$//' entrypoint.sh && chmod +x entrypoint.sh
+
+EXPOSE 8080
+
+ENTRYPOINT ["./entrypoint.sh"]
